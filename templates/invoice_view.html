@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block title %}Invoice {{ invoice.invoice_number }} — {{ company.name }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3 no-print">
+    <a href="{{ url_for('invoices') }}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i>Back to Invoices
+    </a>
+    <div class="d-flex gap-2">
+        <button onclick="window.print()" class="btn btn-outline-dark">
+            <i class="bi bi-printer me-1"></i>Print
+        </button>
+        <form method="POST" action="{{ url_for('invoice_delete', invoice_number=invoice.invoice_number) }}"
+              onsubmit="return confirm('Delete this invoice?')">
+            <button type="submit" class="btn btn-outline-danger">
+                <i class="bi bi-trash me-1"></i>Delete
+            </button>
+        </form>
+    </div>
+</div>
+
+<div class="invoice-container">
+    <!-- Header -->
+    <div class="row mb-5">
+        <div class="col">
+            <h2 class="fw-bold mb-1">{{ company.name }}</h2>
+            <p class="text-muted small mb-0">{{ company.tagline }}</p>
+            <p class="text-muted small mb-0">{{ company.address }}{% if company.city %}, {{ company.city }}{% endif %}</p>
+            <p class="text-muted small mb-0">{{ company.phone }} | {{ company.email }}</p>
+        </div>
+        <div class="col text-end">
+            <h3 class="fw-bold text-primary mb-1">INVOICE</h3>
+            <p class="mb-1"><strong>{{ invoice.invoice_number }}</strong></p>
+            <p class="mb-1 text-muted small">Issued: {{ invoice.created_at.strftime('%B %d, %Y') }}</p>
+            {% if invoice.due_date %}
+            <p class="mb-1 text-muted small">Due: {{ invoice.due_date.strftime('%B %d, %Y') }}</p>
+            {% endif %}
+            <span class="badge bg-{% if invoice.status == 'paid' %}success{% elif invoice.status == 'sent' %}info{% else %}secondary{% endif %} mt-1">
+                {{ invoice.status | title }}
+            </span>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Bill To -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h6 class="text-muted text-uppercase small fw-bold mb-2">Bill To</h6>
+            <p class="fw-semibold mb-0">{{ invoice.client_name }}</p>
+            {% if invoice.client_email %}<p class="text-muted small mb-0">{{ invoice.client_email }}</p>{% endif %}
+            {% if invoice.client_address %}<p class="text-muted small mb-0 mt-1">{{ invoice.client_address }}</p>{% endif %}
+        </div>
+    </div>
+
+    <!-- Line Items -->
+    <table class="table table-bordered mt-4">
+        <thead class="table-dark">
+            <tr>
+                <th>Description</th>
+                <th class="text-center" style="width:80px">Qty</th>
+                <th class="text-end" style="width:120px">Unit Price</th>
+                <th class="text-end" style="width:120px">Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in invoice.items %}
+            <tr>
+                <td>{{ item.description }}</td>
+                <td class="text-center">{{ item.quantity }}</td>
+                <td class="text-end">{{ company.currency_symbol }}{{ "%.2f"|format(item.unit_price) }}</td>
+                <td class="text-end">{{ company.currency_symbol }}{{ "%.2f"|format(item.subtotal) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" class="text-end fw-semibold">Subtotal</td>
+                <td class="text-end">{{ company.currency_symbol }}{{ "%.2f"|format(invoice.subtotal) }}</td>
+            </tr>
+            <tr>
+                <td colspan="3" class="text-end text-muted">Tax ({{ company.tax_rate }}%)</td>
+                <td class="text-end text-muted">{{ company.currency_symbol }}{{ "%.2f"|format(invoice.tax_amount) }}</td>
+            </tr>
+            <tr class="table-dark">
+                <td colspan="3" class="text-end fw-bold fs-5">Total Due</td>
+                <td class="text-end fw-bold fs-5">{{ company.currency_symbol }}{{ "%.2f"|format(invoice.total_amount) }}</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    {% if invoice.notes %}
+    <div class="mt-4 p-3 bg-light rounded">
+        <strong>Notes:</strong>
+        <p class="text-muted mb-0 mt-1">{{ invoice.notes }}</p>
+    </div>
+    {% endif %}
+
+    <div class="text-center mt-5 text-muted small">
+        <p>Thank you for your business!</p>
+        <p>{{ company.website }}</p>
+    </div>
+</div>
+{% endblock %}

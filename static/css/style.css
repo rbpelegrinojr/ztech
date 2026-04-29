@@ -1,0 +1,39 @@
+/* Product cards */
+.product-card { transition: transform 0.2s, box-shadow 0.2s; }
+.product-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+
+/* Category badges */
+.badge-microcontrollers { background-color: #0d6efd; }
+.badge-sensors { background-color: #198754; }
+.badge-modules { background-color: #fd7e14; }
+.badge-raspberry-pi { background-color: #dc3545; }
+
+/* Receipt/Invoice containers */
+.receipt-container, .invoice-container {
+    background: white;
+    padding: 40px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Hero section */
+.hero-section { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
+
+/* Print styles */
+@media print {
+    .no-print { display: none !important; }
+    .receipt-container, .invoice-container { border: none; padding: 0; }
+    body { background: white; }
+}
+
+/* Cart badge */
+.cart-badge { font-size: 0.65rem; }
+
+/* Status badges */
+.status-pending { background-color: #ffc107; color: #000; }
+.status-processing { background-color: #0dcaf0; color: #000; }
+.status-shipped { background-color: #0d6efd; }
+.status-delivered { background-color: #198754; }
+.status-cancelled { background-color: #dc3545; }
