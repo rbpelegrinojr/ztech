@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Settings — {{ company.name }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0"><i class="bi bi-gear me-2"></i>Company Settings</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('settings_post') }}">
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label class="form-label fw-semibold">Company Name <span class="text-danger">*</span></label>
+                            <input type="text" name="name" class="form-control" value="{{ company.name or '' }}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Currency Symbol</label>
+                            <input type="text" name="currency_symbol" class="form-control" value="{{ company.currency_symbol or '₱' }}">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Tagline</label>
+                            <input type="text" name="tagline" class="form-control" value="{{ company.tagline or '' }}">
+                        </div>
+                        <div class="col-md-8">
+                            <label class="form-label fw-semibold">Address</label>
+                            <input type="text" name="address" class="form-control" value="{{ company.address or '' }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">City</label>
+                            <input type="text" name="city" class="form-control" value="{{ company.city or '' }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Phone</label>
+                            <input type="text" name="phone" class="form-control" value="{{ company.phone or '' }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Email</label>
+                            <input type="email" name="email" class="form-control" value="{{ company.email or '' }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Website</label>
+                            <input type="text" name="website" class="form-control" value="{{ company.website or '' }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Tax Rate (%)</label>
+                            <div class="input-group">
+                                <input type="number" name="tax_rate" class="form-control" value="{{ company.tax_rate or 12.0 }}" step="0.1" min="0" max="100">
+                                <span class="input-group-text">%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save me-1"></i>Save Settings
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
